@@ -3,6 +3,10 @@ About rashid-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/rashid-feedstock/blob/main/LICENSE.txt)
 
+
+About rashid
+------------
+
 Home: https://github.com/portolan-sdi/rashid
 
 Package license: Apache-2.0
@@ -14,6 +18,27 @@ Development: https://github.com/portolan-sdi/rashid
 rashid checks a Portolan catalog against the Portolan specification. It
 validates the STAC metadata, the profile schema, the data files, and the
 hosting of a published catalog.
+
+rashid-core holds the code and needs no geospatial library. rashid adds
+the geospatial libraries for the data checks and the rashid command.
+
+About rashid-core
+-----------------
+
+Home: https://github.com/portolan-sdi/rashid
+
+Package license: Apache-2.0
+
+Summary: Validator and linter for Portolan catalogs (metadata checks only)
+
+Development: https://github.com/portolan-sdi/rashid
+
+rashid checks a Portolan catalog against the Portolan specification. It
+validates the STAC metadata, the profile schema, the data files, and the
+hosting of a published catalog.
+
+rashid-core holds the code and needs no geospatial library. rashid adds
+the geospatial libraries for the data checks and the rashid command.
 
 Current build status
 ====================
@@ -35,6 +60,7 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-rashid-green.svg)](https://anaconda.org/conda-forge/rashid) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/rashid.svg)](https://anaconda.org/conda-forge/rashid) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/rashid.svg)](https://anaconda.org/conda-forge/rashid) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/rashid.svg)](https://anaconda.org/conda-forge/rashid) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-rashid--core-green.svg)](https://anaconda.org/conda-forge/rashid-core) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/rashid-core.svg)](https://anaconda.org/conda-forge/rashid-core) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/rashid-core.svg)](https://anaconda.org/conda-forge/rashid-core) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/rashid-core.svg)](https://anaconda.org/conda-forge/rashid-core) |
 
 Installing rashid
 =================
@@ -53,7 +79,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install rashid
+conda install rashid rashid-core
 ```
 
 </details>
@@ -62,7 +88,7 @@ conda install rashid
 <summary>With mamba</summary>
 
 ```
-mamba install rashid
+mamba install rashid rashid-core
 ```
 
 </details>
@@ -72,9 +98,9 @@ mamba install rashid
 
 ```
 # for adding to your local project
-pixi add rashid
+pixi add rashid rashid-core
 # for installing globally
-pixi global install rashid
+pixi global install rashid rashid-core
 ```
 
 </details>

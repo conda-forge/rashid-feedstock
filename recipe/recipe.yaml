@@ -1,57 +1,109 @@
-context:
-  version: "0.4.0"
+schema_version: 1
 
-package:
+context:
+  version: "0.5.0"
+
+recipe:
   name: rashid
   version: ${{ version }}
 
 source:
-  url: https://files.pythonhosted.org/packages/source/r/rashid/rashid-${{ version }}.tar.gz
-  sha256: 8e034631f8ea609be48cfc4ff205a982209d58b3b5e1fc91968840f8b61a71ca
+  # One archive holds both distributions: rashid-core at the root and the
+  # code-free rashid metapackage under meta/rashid.
+  url: https://files.pythonhosted.org/packages/source/r/rashid-core/rashid_core-${{ version }}.tar.gz
+  sha256: 86bc23ec460c1c4585e7eb2aa8c6c0f013aebb4ca6e4efb76ed480aa4bc06679
 
 build:
-  noarch: python
-  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
-  python:
-    entry_points:
-      - rashid = rashid.cli:main
+  noarch: python
 
-requirements:
-  host:
-    - python ${{ python_min }}.*
-    - pip
-    - hatchling
-  run:
-    - python >=${{ python_min }}
-    - click >=8.4
-    - jsonschema >=4.26
-    - jsonschema-rs >=0.58
-    - jsonschema-specifications >=2023.3.6
-    - referencing >=0.30
-    - pyarrow >=21
-    - rasterio >=1.4.4
-    - rio-cogeo >=6
-    - pyproj >=3.7.1
-    - shapely >=2.1
-    - orjson >=3.11
-    - obstore >=0.9
-    - python-tzdata
-
-tests:
-  - python:
-      imports:
-        - rashid
-      pip_check: true
-      python_version:
-        - ${{ python_min }}.*
-        - "*"
-  - requirements:
-      run:
+outputs:
+  - package:
+      name: rashid-core
+    build:
+      script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+    requirements:
+      host:
         - python ${{ python_min }}.*
-    script:
-      - rashid --help
-      - rashid check --help
+        - pip
+        - hatchling
+      run:
+        - python >=${{ python_min }}
+        # [project.dependencies]
+        - click >=8.4
+        - jsonschema >=4.26
+        - jsonschema-rs >=0.58
+        - jsonschema-specifications >=2023.3.6
+        - referencing >=0.30
+        - orjson >=3.11
+        - obstore >=0.9
+        - python-tzdata
+      run_constraints:
+        # [project.optional-dependencies.data]
+        - numpy >=1.24
+        - pyarrow >=21
+        - rasterio >=1.4.4
+        - rio-cogeo >=6
+        - pyproj >=3.7.1
+        - shapely >=2.1
+    tests:
+      - python:
+          imports:
+            - rashid_core
+            - rashid_core.api
+          pip_check: true
+          python_version:
+            - ${{ python_min }}.*
+            - "*"
+      - requirements:
+          run:
+            - python ${{ python_min }}.*
+        script:
+          - python -m rashid_core --help
+          - python -m rashid_core check --help
+    about:
+      summary: Validator and linter for Portolan catalogs (metadata checks only)
+
+  - package:
+      name: rashid
+    build:
+      script: ${{ PYTHON }} -m pip install ./meta/rashid -vv --no-deps --no-build-isolation
+      python:
+        entry_points:
+          - rashid = rashid_core.cli:main
+    requirements:
+      host:
+        - python ${{ python_min }}.*
+        - pip
+        - hatchling
+      run:
+        - python >=${{ python_min }}
+        - ${{ pin_subpackage("rashid-core", exact=True) }}
+        # [project.optional-dependencies.data] of rashid-core
+        - numpy >=1.24
+        - pyarrow >=21
+        - rasterio >=1.4.4
+        - rio-cogeo >=6
+        - pyproj >=3.7.1
+        - shapely >=2.1
+    tests:
+      - python:
+          imports:
+            - rashid_core
+            - rashid_core.data.formats
+          pip_check: true
+          python_version:
+            - ${{ python_min }}.*
+            - "*"
+      - requirements:
+          run:
+            - python ${{ python_min }}.*
+        script:
+          - rashid --version
+          - rashid --help
+          - rashid check --help
+    about:
+      summary: Validator and linter for Portolan catalogs
 
 about:
   homepage: https://github.com/portolan-sdi/rashid
@@ -60,6 +112,9 @@ about:
     rashid checks a Portolan catalog against the Portolan specification. It
     validates the STAC metadata, the profile schema, the data files, and the
     hosting of a published catalog.
+
+    rashid-core holds the code and needs no geospatial library. rashid adds
+    the geospatial libraries for the data checks and the rashid command.
   license: Apache-2.0
   license_file: LICENSE
   repository: https://github.com/portolan-sdi/rashid
