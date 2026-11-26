@@ -1,5 +1,5 @@
 context:
-  version: "0.4.0"
+  version: "0.5.1"
 
 package:
   name: rashid
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://files.pythonhosted.org/packages/source/r/rashid/rashid-${{ version }}.tar.gz
-  sha256: 8e034631f8ea609be48cfc4ff205a982209d58b3b5e1fc91968840f8b61a71ca
+  sha256: f3fbd3a23a84dbcecfffce81768b2078c547ffe784d3d672d913c3c409f5325e
 
 build:
   noarch: python
